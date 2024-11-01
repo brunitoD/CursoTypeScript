@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "module": "commonjs",
+      "outDir": "./", // Genera el archivo .js en la misma carpeta
+      "strict": true
+    },
+    "include": ["*.ts"], // Incluye todos los archivos .ts en la raíz
+    "exclude": ["node_modules"] // Excluye la carpeta node_modules si existe
+  }
+  
