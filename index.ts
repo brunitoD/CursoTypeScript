@@ -85,11 +85,75 @@
 //     console.log(avenger)
 // })
 //---------------------inferencia de datos en un array
+// let hero = {
+//     name : "thor",
+//     age: 1500
+// };
 
-let hero = {
-    name : "thor",
-    age: 1500
-};
+// // hero.power = 222 no podemos crearle un  nuevo dato al objeto
+// //hero.name = 22 no podemos asignarle valores diferentes a los que predeterminado nos dio
 
-// hero.power = 222 no podemos crearle un  nuevo dato al objeto
-//hero.name no podemos
+// //crear heroes mediante funcion
+// const createHero = (name:string, age:number)=>{
+//     return{//aqui retornamos un objeto, la info nos llega con lo que nos pasa cuando llaman a la funcion
+//         name,age
+//     }
+// }
+// const thor = createHero("thor", 1500)
+//Type Alias (de lo mas potente de TS)
+//teoria: nos permite crear de que datos va a estar compuesto los heroes
+
+// type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
+//     name:string
+//     age:number
+// }
+// let hero: Hero ={
+//     name: "thor",
+//     age:1500
+// }
+
+// function createHero(name:string, age: number):Hero{//si no ponemos :hero, nos devuelve un objeto cuando lo llamemos y le pasemos datos, en cambio, con :hero nos devuelve un Hero!
+//     return{name,age}
+// }
+// const thor = createHero("thor",1500)
+
+//lo anterior potenciado para ver la potencia que tienen los tipos en los parametros
+
+// type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
+//     name:string
+//     age:number
+// }
+// let hero: Hero ={
+//     name: "thor",
+//     age:1500
+// }
+
+// function createHero(hero:Hero):Hero{//le queremos pasar un hero, que es del tipo Hero y esto devuelve un Hero
+//   const {name, age} = hero//aqui extraemos el name y el age del hero
+//     return{name,age}
+// }
+// const thor = createHero({name:"thor", age:1500})//aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
+//Optional Properties:
+//aca queremos saber cuales estan inactivos:
+type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
+    readonly id?:number
+    name:string
+    age:number
+    isActive?: boolean//esta preopiedad es opcional con el ?
+}
+let hero: Hero = {
+    name: "thor",
+    age:1500,
+    isActive:true
+}
+
+function createHero(hero:Hero):Hero{//le queremos pasar un hero, que es del tipo Hero y esto devuelve un Hero
+  const {name, age} = hero//aqui extraemos el name y el age del hero
+    return{name,age, isActive:true}//AQUI hacemos que por defecto el heroe este activo, ya que si lo estamos creando significa que lo esta
+}
+const thor = createHero({name:"thor", age:1500})//aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
+console.log(thor)
+thor.id?.toString()//esto es consultar si existe el id antes de hacer el tostring sin necesidad de un condicional(if)
+
+//si viene alguien y de la nada le pinta ponerle a thor un id = 124213123; nos rompe el thor
+//entonces usamos la propieda readOnly para que sea solo de escritura en el type

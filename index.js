@@ -26,62 +26,18 @@
 // let b = 3;
 // let c = a+b;//infiere en que si a y b  son numericos, c se convierte en numerico tambien!!
 //----------------Functions:
-// function saludar (name:string){
-//      console.log(`hola! ${name}`)  
-// }
-// saludar("Bruno")
-// // saludar(2)//no nos lo permitiria
-// const gritar = (grito:string)=>{
-//     console.log(`el grito que escuche fue ${grito}`)
-// }
-// gritar("AAAAAAA")
-// gritar("adawdwad")
-//-------------tipar objeto en funcion
-// function saludar ({name, age} : {name:string, age:number})
-// {
-//     console.log(`hola ${name}, tu edad es de ${age} años`)
-// }
-// saludar({name: "pepe", age : 22})
-// function saludar ({name, age} : {name:string, age:number})
-// {
-//     console.log(`hola ${name}, tu edad es de ${age} años`)
-//     return age;
-// }
-//si quisieramos guardar lo que devuelve en una variable tipo strimg no podriamos, ya que returna number
-// let a:string = saludar({name:"pepe",age:2}) //nos daria:
-//El tipo 'number' no se puede asignar al tipo 'string'.ts(2322)
-//-------------Tipar Funciones
-//si ponemos void como tipo de dato devuelto, y retornamos string, no hay
-//drama porque void significa que no nos importa lo que carajo devulve y funciona igual
-// const FuncionDentroDeFuncion = (funcionRecibida: (name : string) => string)=>{//si hubiera return name; deberiamos poner => string
-//     return funcionRecibida("miguel")//esto lo enviamos al parametro donde llamamos a la funcion
-// }
-// const Funcion = ((name: string)=>{
-//     console.log(`Hola ${name}`)
-//     return name;
-// })
-// FuncionDentroDeFuncion(Funcion);
-// //------------tipar arrow Functions (funciones flecha)
-// const sumar = (b: number, a: number):number=>{
-//     return a+b;
-// }
-// console.log(sumar(3,2))
-//----------------never (caso muy tipico y que nos va a servir)
-//  function throwError(message:string):never {//le decimos que nunca se va a ejecutar por completo y nunca  va a retornar nada
-// 
-//     if(message) throw new Error(message);
-//     throw new  Error(message)
-// }
-//-----------------inferencia en funciones anonimas segun el contexto (estas no hacen falta agregarle el tipo)
-//lo entiende de por si
-// const avengers = ["spiderman", "hulk", "cap america"];
-// avengers.forEach(avenger =>{
-//     console.log(avenger)
-// })
-//---------------------inferencia de datos en un array
+var _a;
 var hero = {
     name: "thor",
-    age: 1500
+    age: 1500,
+    isActive: true
 };
-// hero.power = 222 no podemos crearle un  nuevo dato al objeto
-//hero.name no podemos
+function createHero(hero) {
+    var name = hero.name, age = hero.age; //aqui extraemos el name y el age del hero
+    return { name: name, age: age, isActive: true }; //AQUI hacemos que por defecto el heroe este activo, ya que si lo estamos creando significa que lo esta
+}
+var thor = createHero({ name: "thor", age: 1500 }); //aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
+console.log(thor);
+(_a = thor.id) === null || _a === void 0 ? void 0 : _a.toString(); //esto es consultar si existe el id antes de hacer el tostring sin necesidad de un condicional(if)
+//si viene alguien y de la nada le pinta ponerle a thor un id = 124213123; nos rompe el thor
+//entonces usamos la propieda readOnly para que sea solo de escritura en el type
