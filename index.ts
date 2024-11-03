@@ -1,4 +1,6 @@
 //TEORIA:
+//Types y interfaces esta bueno(es un agregado propio de TS que al compilarlo a JS desaparece y de 30 lineas quedan 5)
+//MIdu Recomienda usar siempre types (tipos)
 // le agregamos una extension, pretty typescript errors, nos explica de mejor manera los errores
 //esto nos va a devolver dos explicaciones de errores con la extension , la de arriba es con
 //la original y la otra (abajo)es la "mejor explicada" --FIN
@@ -410,218 +412,281 @@
 //const data = await response.json() as <TypeGeneradoPorQuick>
 
 // URL de la API de JSONPlaceholder, Ejemplo de consumo de api desde typescript
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
+// const API_URL = "https://jsonplaceholder.typicode.com/posts";
 
-// Función asíncrona para hacer la petición
-async function fetchPosts() {
-    try {
-        const response = await fetch(API_URL); // Realiza la petición a la API
+// // Función asíncrona para hacer la petición
+// async function fetchPosts() {
+//     try {
+//         const response = await fetch(API_URL); // Realiza la petición a la API
         
-        // Verifica si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
+//         // Verifica si la respuesta es exitosa
+//         if (!response.ok) {
+//             throw new Error(`Request failed: ${response.status}`);
+//         }
 
-        const data = await response.json(); // Convierte la respuesta a JSON
+//         const data = await response.json(); // Convierte la respuesta a JSON
 
-        // Mapea los posts y los imprime
-        const posts = data.map((post: { id: number; title: string }) => {
-            console.log(`ID: ${post.id}, Title: ${post.title}`);
-            return post; // Retorna el post si lo necesitas
-        });
+//         // Mapea los posts y los imprime
+//         const posts = data.map((post: { id: number; title: string }) => {
+//             console.log(`ID: ${post.id}, Title: ${post.title}`);
+//             return post; // Retorna el post si lo necesitas
+//         });
 
-        return posts; // Retorna los posts
-    } catch (error) {
-        console.error("Error:", error); // Manejo de errores
-    }
-}
+//         return posts; // Retorna los posts
+//     } catch (error) {
+//         console.error("Error:", error); // Manejo de errores
+//     }
+// }
 
-// Llamar a la función
-fetchPosts();
+// // Llamar a la función
+// fetchPosts();
 
 
 //EJEMPLO USANDO QUICK:
-export interface Welcome {
-    userId: number;
-    id:     number;
-    title:  string;
-    body:   string;
-}
+// export interface Welcome {
+//     userId: number;
+//     id:     number;
+//     title:  string;
+//     body:   string;
+// }
 
-// Converts JSON strings to/from your types
-// and asserts the results of JSON.parse at runtime
-export class Convert {
-    public static toWelcome(json: string): Welcome[] {
-        return cast(JSON.parse(json), a(r("Welcome")));
-    }
+// // Converts JSON strings to/from your types
+// // and asserts the results of JSON.parse at runtime
+// export class Convert {
+//     public static toWelcome(json: string): Welcome[] {
+//         return cast(JSON.parse(json), a(r("Welcome")));
+//     }
 
-    public static welcomeToJson(value: Welcome[]): string {
-        return JSON.stringify(uncast(value, a(r("Welcome"))), null, 2);
-    }
-}
+//     public static welcomeToJson(value: Welcome[]): string {
+//         return JSON.stringify(uncast(value, a(r("Welcome"))), null, 2);
+//     }
+// }
 
-function invalidValue(typ: any, val: any, key: any, parent: any = ''): never {
-    const prettyTyp = prettyTypeName(typ);
-    const parentText = parent ? ` on ${parent}` : '';
-    const keyText = key ? ` for key "${key}"` : '';
-    throw Error(`Invalid value${keyText}${parentText}. Expected ${prettyTyp} but got ${JSON.stringify(val)}`);
-}
+// function invalidValue(typ: any, val: any, key: any, parent: any = ''): never {
+//     const prettyTyp = prettyTypeName(typ);
+//     const parentText = parent ? ` on ${parent}` : '';
+//     const keyText = key ? ` for key "${key}"` : '';
+//     throw Error(`Invalid value${keyText}${parentText}. Expected ${prettyTyp} but got ${JSON.stringify(val)}`);
+// }
 
-function prettyTypeName(typ: any): string {
-    if (Array.isArray(typ)) {
-        if (typ.length === 2 && typ[0] === undefined) {
-            return `an optional ${prettyTypeName(typ[1])}`;
-        } else {
-            return `one of [${typ.map(a => { return prettyTypeName(a); }).join(", ")}]`;
-        }
-    } else if (typeof typ === "object" && typ.literal !== undefined) {
-        return typ.literal;
-    } else {
-        return typeof typ;
-    }
-}
+// function prettyTypeName(typ: any): string {
+//     if (Array.isArray(typ)) {
+//         if (typ.length === 2 && typ[0] === undefined) {
+//             return `an optional ${prettyTypeName(typ[1])}`;
+//         } else {
+//             return `one of [${typ.map(a => { return prettyTypeName(a); }).join(", ")}]`;
+//         }
+//     } else if (typeof typ === "object" && typ.literal !== undefined) {
+//         return typ.literal;
+//     } else {
+//         return typeof typ;
+//     }
+// }
 
-function jsonToJSProps(typ: any): any {
-    if (typ.jsonToJS === undefined) {
-        const map: any = {};
-        typ.props.forEach((p: any) => map[p.json] = { key: p.js, typ: p.typ });
-        typ.jsonToJS = map;
-    }
-    return typ.jsonToJS;
-}
+// function jsonToJSProps(typ: any): any {
+//     if (typ.jsonToJS === undefined) {
+//         const map: any = {};
+//         typ.props.forEach((p: any) => map[p.json] = { key: p.js, typ: p.typ });
+//         typ.jsonToJS = map;
+//     }
+//     return typ.jsonToJS;
+// }
 
-function jsToJSONProps(typ: any): any {
-    if (typ.jsToJSON === undefined) {
-        const map: any = {};
-        typ.props.forEach((p: any) => map[p.js] = { key: p.json, typ: p.typ });
-        typ.jsToJSON = map;
-    }
-    return typ.jsToJSON;
-}
+// function jsToJSONProps(typ: any): any {
+//     if (typ.jsToJSON === undefined) {
+//         const map: any = {};
+//         typ.props.forEach((p: any) => map[p.js] = { key: p.json, typ: p.typ });
+//         typ.jsToJSON = map;
+//     }
+//     return typ.jsToJSON;
+// }
 
-function transform(val: any, typ: any, getProps: any, key: any = '', parent: any = ''): any {
-    function transformPrimitive(typ: string, val: any): any {
-        if (typeof typ === typeof val) return val;
-        return invalidValue(typ, val, key, parent);
-    }
+// function transform(val: any, typ: any, getProps: any, key: any = '', parent: any = ''): any {
+//     function transformPrimitive(typ: string, val: any): any {
+//         if (typeof typ === typeof val) return val;
+//         return invalidValue(typ, val, key, parent);
+//     }
 
-    function transformUnion(typs: any[], val: any): any {
-        // val must validate against one typ in typs
-        const l = typs.length;
-        for (let i = 0; i < l; i++) {
-            const typ = typs[i];
-            try {
-                return transform(val, typ, getProps);
-            } catch (_) {}
-        }
-        return invalidValue(typs, val, key, parent);
-    }
+//     function transformUnion(typs: any[], val: any): any {
+//         // val must validate against one typ in typs
+//         const l = typs.length;
+//         for (let i = 0; i < l; i++) {
+//             const typ = typs[i];
+//             try {
+//                 return transform(val, typ, getProps);
+//             } catch (_) {}
+//         }
+//         return invalidValue(typs, val, key, parent);
+//     }
 
-    function transformEnum(cases: string[], val: any): any {
-        if (cases.indexOf(val) !== -1) return val;
-        return invalidValue(cases.map(a => { return l(a); }), val, key, parent);
-    }
+//     function transformEnum(cases: string[], val: any): any {
+//         if (cases.indexOf(val) !== -1) return val;
+//         return invalidValue(cases.map(a => { return l(a); }), val, key, parent);
+//     }
 
-    function transformArray(typ: any, val: any): any {
-        // val must be an array with no invalid elements
-        if (!Array.isArray(val)) return invalidValue(l("array"), val, key, parent);
-        return val.map(el => transform(el, typ, getProps));
-    }
+//     function transformArray(typ: any, val: any): any {
+//         // val must be an array with no invalid elements
+//         if (!Array.isArray(val)) return invalidValue(l("array"), val, key, parent);
+//         return val.map(el => transform(el, typ, getProps));
+//     }
 
-    function transformDate(val: any): any {
-        if (val === null) {
-            return null;
-        }
-        const d = new Date(val);
-        if (isNaN(d.valueOf())) {
-            return invalidValue(l("Date"), val, key, parent);
-        }
-        return d;
-    }
+//     function transformDate(val: any): any {
+//         if (val === null) {
+//             return null;
+//         }
+//         const d = new Date(val);
+//         if (isNaN(d.valueOf())) {
+//             return invalidValue(l("Date"), val, key, parent);
+//         }
+//         return d;
+//     }
 
-    function transformObject(props: { [k: string]: any }, additional: any, val: any): any {
-        if (val === null || typeof val !== "object" || Array.isArray(val)) {
-            return invalidValue(l(ref || "object"), val, key, parent);
-        }
-        const result: any = {};
-        Object.getOwnPropertyNames(props).forEach(key => {
-            const prop = props[key];
-            const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
-            result[prop.key] = transform(v, prop.typ, getProps, key, ref);
-        });
-        Object.getOwnPropertyNames(val).forEach(key => {
-            if (!Object.prototype.hasOwnProperty.call(props, key)) {
-                result[key] = transform(val[key], additional, getProps, key, ref);
-            }
-        });
-        return result;
-    }
+//     function transformObject(props: { [k: string]: any }, additional: any, val: any): any {
+//         if (val === null || typeof val !== "object" || Array.isArray(val)) {
+//             return invalidValue(l(ref || "object"), val, key, parent);
+//         }
+//         const result: any = {};
+//         Object.getOwnPropertyNames(props).forEach(key => {
+//             const prop = props[key];
+//             const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
+//             result[prop.key] = transform(v, prop.typ, getProps, key, ref);
+//         });
+//         Object.getOwnPropertyNames(val).forEach(key => {
+//             if (!Object.prototype.hasOwnProperty.call(props, key)) {
+//                 result[key] = transform(val[key], additional, getProps, key, ref);
+//             }
+//         });
+//         return result;
+//     }
 
-    if (typ === "any") return val;
-    if (typ === null) {
-        if (val === null) return val;
-        return invalidValue(typ, val, key, parent);
-    }
-    if (typ === false) return invalidValue(typ, val, key, parent);
-    let ref: any = undefined;
-    while (typeof typ === "object" && typ.ref !== undefined) {
-        ref = typ.ref;
-        typ = typeMap[typ.ref];
-    }
-    if (Array.isArray(typ)) return transformEnum(typ, val);
-    if (typeof typ === "object") {
-        return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
-            : typ.hasOwnProperty("arrayItems")    ? transformArray(typ.arrayItems, val)
-            : typ.hasOwnProperty("props")         ? transformObject(getProps(typ), typ.additional, val)
-            : invalidValue(typ, val, key, parent);
-    }
-    // Numbers can be parsed by Date but shouldn't be.
-    if (typ === Date && typeof val !== "number") return transformDate(val);
-    return transformPrimitive(typ, val);
-}
+//     if (typ === "any") return val;
+//     if (typ === null) {
+//         if (val === null) return val;
+//         return invalidValue(typ, val, key, parent);
+//     }
+//     if (typ === false) return invalidValue(typ, val, key, parent);
+//     let ref: any = undefined;
+//     while (typeof typ === "object" && typ.ref !== undefined) {
+//         ref = typ.ref;
+//         typ = typeMap[typ.ref];
+//     }
+//     if (Array.isArray(typ)) return transformEnum(typ, val);
+//     if (typeof typ === "object") {
+//         return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
+//             : typ.hasOwnProperty("arrayItems")    ? transformArray(typ.arrayItems, val)
+//             : typ.hasOwnProperty("props")         ? transformObject(getProps(typ), typ.additional, val)
+//             : invalidValue(typ, val, key, parent);
+//     }
+//     // Numbers can be parsed by Date but shouldn't be.
+//     if (typ === Date && typeof val !== "number") return transformDate(val);
+//     return transformPrimitive(typ, val);
+// }
 
-function cast<T>(val: any, typ: any): T {
-    return transform(val, typ, jsonToJSProps);
-}
+// function cast<T>(val: any, typ: any): T {
+//     return transform(val, typ, jsonToJSProps);
+// }
 
-function uncast<T>(val: T, typ: any): any {
-    return transform(val, typ, jsToJSONProps);
-}
+// function uncast<T>(val: T, typ: any): any {
+//     return transform(val, typ, jsToJSONProps);
+// }
 
-function l(typ: any) {
-    return { literal: typ };
-}
+// function l(typ: any) {
+//     return { literal: typ };
+// }
 
-function a(typ: any) {
-    return { arrayItems: typ };
-}
+// function a(typ: any) {
+//     return { arrayItems: typ };
+// }
 
-function u(...typs: any[]) {
-    return { unionMembers: typs };
-}
+// function u(...typs: any[]) {
+//     return { unionMembers: typs };
+// }
 
-function o(props: any[], additional: any) {
-    return { props, additional };
-}
+// function o(props: any[], additional: any) {
+//     return { props, additional };
+// }
 
-function m(additional: any) {
-    return { props: [], additional };
-}
+// function m(additional: any) {
+//     return { props: [], additional };
+// }
 
-function r(name: string) {
-    return { ref: name };
-}
+// function r(name: string) {
+//     return { ref: name };
+// }
 
-const typeMap: any = {
-    "Welcome": o([
-        { json: "userId", js: "userId", typ: 0 },
-        { json: "id", js: "id", typ: 0 },
-        { json: "title", js: "title", typ: "" },
-        { json: "body", js: "body", typ: "" },
-    ], false),
-};
+// const typeMap: any = {
+//     "Welcome": o([
+//         { json: "userId", js: "userId", typ: 0 },
+//         { json: "id", js: "id", typ: 0 },
+//         { json: "title", js: "title", typ: "" },
+//         { json: "body", js: "body", typ: "" },
+//     ], false),
+// };
 //si te hace falta, min 48 curso 2 midu
+//FIN
+//--------------------------------------INTERFACES
+//se recomienda usar mayormente tipos, salvo que los objetos a crear sean muy grandes
+//es muy parecido a types, tambien podemos hacer interfaces añidadas, en types tambien logramos algo similar
+//la principal diferencia es que nos permite hacer uso de "extends" para extender una interface recibiendo los datos de otra
+//en types podesmos hacerlo pero usando el union types...
+// interface RelojesHombre {
+//     nombre: "Lacoste"
+//     stock: 2
+// }
+// interface RelojesDamas extends RelojesHombre{//recibimos los datos de Relojes hombre y le agregamos uno nuevo
+//     malla:"cuero"
+// }
+// interface Carrito  {
+//     cantidad: 1
+//     Productos: RelojesDamas[]
+// }
 
 
-//FIN DE LA VERGA ESTA
 
+// const carrito: Carrito ={//carrito recibe la interface de RelojesDamas, por eso debemos pasarle 3 datos a productos, si fuese el de RH debemos pasar solo 2
+//     cantidad:1,
+//     Productos: [{
+//         nombre: "Lacoste",
+//         stock: 2,
+//         malla:"cuero"
+//     }]
+// }
+
+// //------ejemplo de interface para un carrito carrito:
+// interface Producto {
+
+// }
+// interface CarritoOpciones{
+//     add: (product: Producto)=> void,
+//     remove: (id:number)=> void,
+//     clear: () =>void,
+// }
+//podemos escribir dos veces una interfaz, funcionaria mas o menos como union types(no usar)
+//en types no se puede crear el mismo type dos veces, en interface si y esto puede darnos un error
+//puede llegar a ser util y sacarle provecho a este error
+//ChatGPT:
+//¡Sí, definitivamente puedes usar interfaces para manejar la manipulación de un carrito
+// de compras en TypeScript! Las interfaces son una excelente manera de definir
+// la estructura de tus objetos y las funciones que manipulan esos objetos.
+//Aquí tienes un ejemplo más completo que incluye la definición de la interfaz 
+//Producto, la interfaz CarritoOpciones, y una clase Carrito que implementa estas
+// interfaces.
+//------------control de tipo de un dato dentro de un type o interface: EJEMPLO DE USO HECHO POR NOSOTROS
+
+// type HeroId = string//darle estos tipos de datos que va a tener un dato dentro de
+// //una interface, solo se puede realizar con un type
+
+// interface Hero {
+//     id:HeroId
+//     name:string
+//     age:number
+// }
+// //-----------------
+
+// const Heroe:Hero ={
+//     id:"abcde4",
+//     name:"bruno",
+//     age:20
+// }
+
+// console.log(Heroe.id)  
