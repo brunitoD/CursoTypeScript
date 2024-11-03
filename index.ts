@@ -15,7 +15,11 @@
 //Al utilizar TypeScript en el desarrollo web, no solo reduces la posibilidad de errores, sino que también mejoras la legibilidad y la mantenibilidad del código,
 //lo que es especialmente valioso en proyectos a largo plazo.
 //typeof: te permite crear codigo a partir de otro codigo LIN255
-//
+//Para hacer un inner html debemos validar que el contenedor o lo que querramos inyectarle codigo, que no sea null, EJ  if(div){div.innerHTML="hola"}
+////enum funciona tambien como tipo!!!! en funciones podemos aclarar que recibimos un tipo enum
+
+
+
 //CONCEPTOS BASICOS:
 //--------------ejemplo objeto para ver cuando ponemos el mouse arriba que nos dice
 // const persona = {
@@ -296,7 +300,7 @@
 //     console.log(`Lenguaje: ${i.Lenguaje}\nDificultad del 1 al 3: ${i.dificultad}`);
 // });
 
-//EJEMPLO CON HEROS
+//--EJEMPLO CON HEROS
 // type HeroId = `${string}-${string}-${string}-${string}-${string}`
 // type HeroPowerScale = 'local' | 'planetary' | 'galactic' | 'universal' //aca le decimos que su escala de poder puede ser una de esas cadena de textos esta (| = o) esta
 
@@ -308,4 +312,77 @@
 
 // const herosWithBasicInfo:HeroInfoInput[] = [] //podemos tambien decirle a nuestro objeto que tipos de datos va a obtener y que tipo(poner mouse arriba de herosWithBasicInfo y vas a ver lo que hereda)
 
-//
+//---------------------Matrices y tuplas
+//explicacion con tateti
+//una tupla es un array con un limite fijado de longitud, en este caso es GameBoard
+// type cellValue = 'X'| 'O'|''
+
+// type GameBoard = [
+//     [cellValue,cellValue,cellValue],
+//     [cellValue,cellValue,cellValue],
+//     [cellValue,cellValue,cellValue]
+// ]
+
+// const gameBoard: GameBoard = [
+//     ['X','O','X'],
+//     ['X','O','X'],
+//     ['X','O','X']
+// ]
+
+// //ejemplo para entender tupla sencillo
+// //Los colores RGB son tuplas, ya que tienen un alogitud y un tipo de dato definido
+// type RGB = readonly [number,number,number]//indicamos que rgb va a ser un array que recibe con numeros
+
+// const red:RGB = [2,1,3];
+// red.push(4)//Se lo traga, esto destruye a la tupla, es un fallo de ts que no loarreglan porque rompe la retrocompatibilidad con todo lo logrado en el lenguaje
+//la forma para slucionarlo es poner a RGB como ReadOnly
+// console.log(rgb)
+//---------------------------ENUMS---ejemplo en js y como lo hariamos en TS con ENUMS
+//en javascript podemos utilizar algo asi para dar mensajes de error:
+
+// const ERROR_TYPES = {
+//      NOT_FOUND: "notfound",
+//      UNAUTHORIZED: "Unahotirized",
+//      FORBIDDEN: "Forbidden"
+// }
+
+// function mostrarMensajeERR(tipoDeError:string){
+//      if(tipoDeError === ERROR_TYPES.NOT_FOUND){
+//         console.log("no se encuentra el recurso")
+//      }
+//      else if (tipoDeError === ERROR_TYPES.UNAUTHORIZED){
+//         console.log("sin permiso para acceder")
+//      }
+//      else if(tipoDeError === ERROR_TYPES.FORBIDDEN){
+//         console.log("error no existe")
+//      }
+// }  
+
+//------------------forma de hacerlo en TS:
+//teoria ENUMS
+//enum funciona tambien como tipo para lo que recibe una funcion o cuando creamos una variable!!!!
+//usar siempre const enum, genera menos codigo en el compilado que "enum" solamente!!! 
+//pero si lo que hagamos se va dirigido a algo externo a la web, usar enum para que se pueda consumir(curso 2 midu, min 31) 
+//les da numeros a los valores q hay creados dentro, especificado=>
+// enum ERROR_TYPES  {
+//     NOT_FOUND, //0
+//     UNAUTHORIZED, //1
+//     FORBIDDEN  //2
+// }
+// si estuvieramos laburadno con una base de datos que ya tiene sus id para los errores, lo correcto seria hacer esto:
+enum ERROR_TYPES  {
+    NOT_FOUND = "notFound", //en lugar de un indice automatico por enum, tendriamos u8n string y no chocaria con la BD
+    UNAUTHORIZED ="unauthorized", 
+    FORBIDDEN ="forbidden" 
+}
+function mostrarMensajeERR (tipoDeError:ERROR_TYPES){
+     if(tipoDeError === ERROR_TYPES.NOT_FOUND){
+        console.log("no se encuentra el recurso")
+     }
+     else if (tipoDeError === ERROR_TYPES.UNAUTHORIZED){
+        console.log("sin permiso para acceder")
+     }
+     else if(tipoDeError === ERROR_TYPES.FORBIDDEN){
+        console.log("error no existe")
+     }
+}  

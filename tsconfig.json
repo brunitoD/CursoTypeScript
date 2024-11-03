@@ -1,26 +1,3 @@
-// {
-//     "compilerOptions": {
-//       "target": "es5",
-//       "module": "commonjs",
-//       "outDir": "./", // Genera el archivo .js en la misma carpeta
-//       "strict": true
-//     },
-//     "include": ["*.ts"], // Incluye todos los archivos .ts en la raíz
-//     "exclude": ["node_modules"] // Excluye la carpeta node_modules si existe
-//   }
-  
-//   {
-//     "compilerOptions": {
-//         "target": "es5",                         // Compila a ES5
-//         "module": "commonjs",                    // Sistema de módulos
-//         "outDir": "./",                          // Salida de archivos .js en la misma carpeta
-//         "strict": true,                          // Habilita todas las verificaciones estrictas
-//         "lib": ["dom", "es5"],                  // Incluye las definiciones de DOM y ES5
-//         "esModuleInterop": true                  // Habilita interoperabilidad entre módulos
-//     },
-//     "include": ["*.ts"],                        // Incluye todos los archivos .ts en la raíz
-//     "exclude": ["node_modules"]                 // Excluye la carpeta node_modules si existe
-// }
 {
   "compilerOptions": {
       "target": "es5",

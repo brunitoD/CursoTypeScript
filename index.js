@@ -16,7 +16,7 @@
 //Al utilizar TypeScript en el desarrollo web, no solo reduces la posibilidad de errores, sino que también mejoras la legibilidad y la mantenibilidad del código,
 //lo que es especialmente valioso en proyectos a largo plazo.
 //typeof: te permite crear codigo a partir de otro codigo LIN255
-//
+//Para hacer un inner html debemos validar que el contenedor o lo que querramos inyectarle codigo, que no sea null, EJ  if(div){div.innerHTML="hola"}
 //CONCEPTOS BASICOS:
 //--------------ejemplo objeto para ver cuando ponemos el mouse arriba que nos dice
 // const persona = {
@@ -257,7 +257,7 @@
 // Lenguages.forEach(i => {
 //     console.log(`Lenguaje: ${i.Lenguaje}\nDificultad del 1 al 3: ${i.dificultad}`);
 // });
-//EJEMPLO CON HEROS
+//--EJEMPLO CON HEROS
 // type HeroId = `${string}-${string}-${string}-${string}-${string}`
 // type HeroPowerScale = 'local' | 'planetary' | 'galactic' | 'universal' //aca le decimos que su escala de poder puede ser una de esas cadena de textos esta (| = o) esta
 // type HeroInfoInput = {
@@ -266,4 +266,22 @@
 //     age:number
 // }
 // const herosWithBasicInfo:HeroInfoInput[] = [] //podemos tambien decirle a nuestro objeto que tipos de datos va a obtener y que tipo(poner mouse arriba de herosWithBasicInfo y vas a ver lo que hereda)
-//
+//---------------------Matrices y tuplas
+//explicacion con tateti
+//una tupla es un array con un limite fijado de longitud, en este caso es GameBoard
+// type cellValue = 'X'| 'O'|''
+// type GameBoard = [
+//     [cellValue,cellValue,cellValue],
+//     [cellValue,cellValue,cellValue],
+//     [cellValue,cellValue,cellValue]
+// ]
+// const gameBoard: GameBoard = [
+//     ['X','O','X'],
+//     ['X','O','X'],
+//     ['X','O','X']
+// ]
+// //ejemplo para entender tupla sencillo
+// //Los colores RGB son tuplas, ya que tienen un alogitud y un tipo de dato definido
+// type RGB = [number,number,number]//indicamos que rgb va a ser un array que recibe con numeros
+// const rgb:RGB = [2,1,3];
+// console.log(rgb)
