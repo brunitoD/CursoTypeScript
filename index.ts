@@ -9,6 +9,13 @@
 //INFERIR: significa que sin decrile el tipo, TS si lo sabe (infiere en el tipo) en varias ocasiones sucede
 //en funcion si devolvemos edad que es numerico, si ponemos el mouse arriba del nombre de la function nos dice lo que devuelve al final de todo
 //FUNCIONES: se escriben igual que en javascript, pero a ,los parametros debemos indicarles el TIPO, hay excepciones!! LIN 28
+//crypto.randomUUID() : sirve para generar un id aleatorio!!
+//readOnly no se puede modificar jamas su valor, lo usamos para el id de hero
+//TYPE teoria:
+//Al utilizar TypeScript en el desarrollo web, no solo reduces la posibilidad de errores, sino que también mejoras la legibilidad y la mantenibilidad del código,
+//lo que es especialmente valioso en proyectos a largo plazo.
+//typeof: te permite crear codigo a partir de otro codigo LIN255
+//
 //CONCEPTOS BASICOS:
 //--------------ejemplo objeto para ver cuando ponemos el mouse arriba que nos dice
 // const persona = {
@@ -101,7 +108,7 @@
 // }
 // const thor = createHero("thor", 1500)
 //Type Alias (de lo mas potente de TS)
-//teoria: nos permite crear de que datos va a estar compuesto los heroes
+//--teoria: nos permite crear de que datos va a estar compuesto los heroes
 
 // type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
 //     name:string
@@ -133,27 +140,139 @@
 //     return{name,age}
 // }
 // const thor = createHero({name:"thor", age:1500})//aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
+
+//-----------------Templete union type
+// type HexadecimalColor = `#${string}`
+
+// // const color: HexadecimalColor = '0033ff';//se queja porque no tiene Hashtag y arriba esta indicado que si debia tenerla
+// const color2: HexadecimalColor = '#003344'
+
 //Optional Properties:
-//aca queremos saber cuales estan inactivos:
-type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
-    readonly id?:number
-    name:string
-    age:number
-    isActive?: boolean//esta preopiedad es opcional con el ?
-}
-let hero: Hero = {
-    name: "thor",
-    age:1500,
-    isActive:true
+// aca queremos saber cuales estan inactivos:
+// type HeroId = `${string}-${string}-${string}-${string}-${string}`//creacion de tipos para poder usarlo en otros tipos
+// type Hero = {//creamos el tipo de variables del heroe que vamos a estar aceptando
+//     readonly id?: HeroId//podemos indicar el tipo creando un tipo -lin139- :) readOnly no se puede modificar jamas su valor, lo usamos para el id de hero
+//     name:string
+//     age:number
+//     isActive?: boolean//esta preopiedad es opcional con el ?
+// }
+// let hero: Hero = {
+//     name: "thor",
+//     age:1500,
+// }
+
+// function createHero(hero:Hero):Hero{//le queremos pasar un hero, que es del tipo Hero y esto devuelve un Hero
+//   const {name, age} = hero//aqui extraemos el name y el age del hero
+//     return{id:crypto.randomUUID(), name,age, isActive:true}//AQUI hacemos que por defecto el heroe este activo, ya que si lo estamos creando significa que lo esta
+// }
+// // lo bueno de TS es que podemos indicar que tipo de cadena queremos que nos acepte el id
+// const thor = createHero({name:"thor", age:1500})//aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
+// console.log(thor)
+// thor.id?.toString()//esto es consultar si existe el id antes de hacer el tostring sin necesidad de un condicional(if)
+//const thor = Object.freeze(createHero({name:"thor", age:1500})) esto nos sirve para decirle que no se pueda mutar!!
+// si viene alguien y de la nada le pinta ponerle a thor un id = 124213123; nos rompe el thor
+// entonces usamos la propieda readOnly para que sea solo de escritura en el type
+//-------------------------union types esto | esto
+//ejemplo tipico(sin los comentarios de arriba)
+// type HeroId = `${string}-${string}-${string}-${string}-${string}`
+
+//agregados en esta parte y en la lin184, lin197
+// type HeroPowerScale = 'local' | 'planetary' | 'galactic' | 'universal' //aca le decimos que su escala de poder puede ser una de esas cadena de textos esta (| = o) esta
+// let ann: number | string //UNION DE TIPOS podemos indicarle dos tipos, una locura!
+// let annn: string | 2 // podemos indicarle directamente el  valor 
+// const enableAnimationDuration: boolean | number = 200 //200ms
+
+// type Hero ={
+//     readonly id?: HeroId
+//     name:string
+//     age:number
+//     isActive?: boolean
+//     powerScale?: HeroPowerScale
+// }
+// let hero: Hero = {
+//     name: "thor",
+//     age:1500,
+// }
+
+// function createHero(hero:Hero):Hero{
+//   const {name, age} = hero
+//     return{id:crypto.randomUUID(), name,age, isActive:true}
+// }
+
+// const thor = createHero({name:"thor", age:1500})
+// thor.powerScale = "universal" //otro agregado de esta parte
+// console.log(thor)
+        
+//-----------------intersection Types
+//para extender tipos, como hacemos? a diferencia del union types que nos permitia esto | esto, este es esto & esto tenemos esta propiedad
+// type HeroId = `${string}-${string}-${string}-${string}-${string}`
+
+// // agregados en esta parte y en la lin184, lin197
+// type HeroPowerScale = 'local' | 'planetary' | 'galactic' | 'universal' //aca le decimos que su escala de poder puede ser una de esas cadena de textos esta (| = o) esta
+// let ann: number | string //UNION DE TIPOS podemos indicarle dos tipos, una locura!
+// let annn: string | 2 // podemos indicarle directamente el  valor 
+// const enableAnimationDuration: boolean | number = 200 //200ms
+// //------desde aca comienza el cambio usando intersection types
+// type HeroInfoInput = {
+//     name:string
+//     age:number
+// }
+
+// type HeroProperties ={
+//     readonly id?: HeroId
+//     isActive?: boolean
+//     powerScale?: HeroPowerScale
+// }
+// type Hero = HeroInfoInput & HeroProperties;//unimos propiedades
+// let hero: Hero = {
+//     name: "thor",
+//     age:1500,
+// }
+// //-----------------hasta aca
+// function createHero(input:HeroInfoInput):Hero{//aca modificamos y le decimos que input(o el nombre que querramos) acepte un hero mucho mas simple sin tener que mover el otro type tan grande y usar solo una parte de el
+//   const {name, age} = input
+//     return{id:crypto.randomUUID(), name,age, isActive:true}
+// }
+
+// const thor = createHero({name:"thor", age:1500})
+// thor.powerScale = "universal" //otro agregado de esta parte
+// console.log(thor)
+
+//---------------type indexing
+
+// type HeroProperties = {
+//     isActive: boolean
+//     address: {
+//         planet: string,
+//         city: string
+//     }
+// }
+// const addressHero: HeroProperties['address']= {//esto nos permite reutilizar partes de un tipo que tengamos por ahi
+//     city: 'madrid',
+//     planet: 'tierra'
+// }
+
+//-----------------------Type From Value
+// const address = {
+//     planet: 'Earth',
+//     city: 'madrid'
+// }
+
+// type Address = typeof address;//creando esto, ahora Address podemos heredarlo en otro lado
+
+// const addressQSY: Address = {//aca heredamos Address, que esta planteado para recibir dos tipos de datos(planet y city)
+//     planet:'marte',
+//     city: 'no hay'
+// }
+
+//--------------------tyoe from function return (extraer los tipos de lo que devuelve la funcion)
+
+function createAddress(){
+    return {
+        planet: 'tierra',
+        city: 'mexico  '
+    }
 }
 
-function createHero(hero:Hero):Hero{//le queremos pasar un hero, que es del tipo Hero y esto devuelve un Hero
-  const {name, age} = hero//aqui extraemos el name y el age del hero
-    return{name,age, isActive:true}//AQUI hacemos que por defecto el heroe este activo, ya que si lo estamos creando significa que lo esta
-}
-const thor = createHero({name:"thor", age:1500})//aca le pasamos un objeto, porque en la funcion recibe un hero/objeto :)
-console.log(thor)
-thor.id?.toString()//esto es consultar si existe el id antes de hacer el tostring sin necesidad de un condicional(if)
-
-//si viene alguien y de la nada le pinta ponerle a thor un id = 124213123; nos rompe el thor
-//entonces usamos la propieda readOnly para que sea solo de escritura en el type
+type Address = ReturnType<typeof createAddress>//el return type es: quiero que me recuperes el tipo de lo que devuleve la funcion que tiene este createAddress
+//ahora el Address tiene los valores que retorna la funcion
