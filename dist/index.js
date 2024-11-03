@@ -18,8 +18,6 @@
 //typeof: te permite crear codigo a partir de otro codigo LIN255
 //Para hacer un inner html debemos validar que el contenedor o lo que querramos inyectarle codigo, que no sea null, EJ  if(div){div.innerHTML="hola"}
 ////enum funciona tambien como tipo!!!! en funciones podemos aclarar que recibimos un tipo enum
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Convert = void 0;
 //CONCEPTOS BASICOS:
 //--------------ejemplo objeto para ver cuando ponemos el mouse arriba que nos dice
 // const persona = {
@@ -345,204 +343,15 @@ exports.Convert = void 0;
 //     const ctx = canvas.getContext('2d')
 // }
 //de esta forma nos aseguramos de que el elemneto que recibimos es un canvas
-// const canvas = document.getElementById("span")//aca ingresamos span a propisto para ver error, pero no petaria por la validacion que hay acontinuacion
-// if(canvas instanceof HTMLCanvasElement){
-//     const ctxContexto = canvas.getContext('2d')
-// }
+const canvas = document.getElementById("span"); //aca ingresamos span a propisto para ver error, pero no petaria por la validacion que hay acontinuacion
+if (canvas instanceof HTMLCanvasElement) {
+    const ctxContexto = canvas.getContext('2d');
+}
 //typeof => para tipos (string,number,booleam)=> basicos
 //instanceof => para instancias (canvas, date) => para mas complejidad
-//---------------------------------FETCH de datos=>{
-//en typescript debemos indicarle el tipo que nos devuelve ese fetch, podemos ir a lo que querramos traer con un fetch,
-// copiarlo todo, ir a la aplicacion quicktype, se lo pasamos, seleccionamos el lenguaje y nos devuelve todo con los tipos y lo pegamos por encima de nuestro fetch
-//para luego cuando debamos indicarle el AS (aserciones) a nuestra funcion por ejemplo:
-//const data = await response.json() as <TypeGeneradoPorQuick>
-// URL de la API de JSONPlaceholder, Ejemplo de consumo de api desde typescript
-const API_URL = "https://jsonplaceholder.typicode.com/posts";
-// Función asíncrona para hacer la petición
-async function fetchPosts() {
-    try {
-        const response = await fetch(API_URL); // Realiza la petición a la API
-        // Verifica si la respuesta es exitosa
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
-        const data = await response.json(); // Convierte la respuesta a JSON
-        // Mapea los posts y los imprime
-        const posts = data.map((post) => {
-            console.log(`ID: ${post.id}, Title: ${post.title}`);
-            return post; // Retorna el post si lo necesitas
-        });
-        return posts; // Retorna los posts
-    }
-    catch (error) {
-        console.error("Error:", error); // Manejo de errores
-    }
-}
-// Llamar a la función
-fetchPosts();
-// Converts JSON strings to/from your types
-// and asserts the results of JSON.parse at runtime
-class Convert {
-    static toWelcome(json) {
-        return cast(JSON.parse(json), a(r("Welcome")));
-    }
-    static welcomeToJson(value) {
-        return JSON.stringify(uncast(value, a(r("Welcome"))), null, 2);
-    }
-}
-exports.Convert = Convert;
-function invalidValue(typ, val, key, parent = '') {
-    const prettyTyp = prettyTypeName(typ);
-    const parentText = parent ? ` on ${parent}` : '';
-    const keyText = key ? ` for key "${key}"` : '';
-    throw Error(`Invalid value${keyText}${parentText}. Expected ${prettyTyp} but got ${JSON.stringify(val)}`);
-}
-function prettyTypeName(typ) {
-    if (Array.isArray(typ)) {
-        if (typ.length === 2 && typ[0] === undefined) {
-            return `an optional ${prettyTypeName(typ[1])}`;
-        }
-        else {
-            return `one of [${typ.map(a => { return prettyTypeName(a); }).join(", ")}]`;
-        }
-    }
-    else if (typeof typ === "object" && typ.literal !== undefined) {
-        return typ.literal;
-    }
-    else {
-        return typeof typ;
-    }
-}
-function jsonToJSProps(typ) {
-    if (typ.jsonToJS === undefined) {
-        const map = {};
-        typ.props.forEach((p) => map[p.json] = { key: p.js, typ: p.typ });
-        typ.jsonToJS = map;
-    }
-    return typ.jsonToJS;
-}
-function jsToJSONProps(typ) {
-    if (typ.jsToJSON === undefined) {
-        const map = {};
-        typ.props.forEach((p) => map[p.js] = { key: p.json, typ: p.typ });
-        typ.jsToJSON = map;
-    }
-    return typ.jsToJSON;
-}
-function transform(val, typ, getProps, key = '', parent = '') {
-    function transformPrimitive(typ, val) {
-        if (typeof typ === typeof val)
-            return val;
-        return invalidValue(typ, val, key, parent);
-    }
-    function transformUnion(typs, val) {
-        // val must validate against one typ in typs
-        const l = typs.length;
-        for (let i = 0; i < l; i++) {
-            const typ = typs[i];
-            try {
-                return transform(val, typ, getProps);
-            }
-            catch (_) { }
-        }
-        return invalidValue(typs, val, key, parent);
-    }
-    function transformEnum(cases, val) {
-        if (cases.indexOf(val) !== -1)
-            return val;
-        return invalidValue(cases.map(a => { return l(a); }), val, key, parent);
-    }
-    function transformArray(typ, val) {
-        // val must be an array with no invalid elements
-        if (!Array.isArray(val))
-            return invalidValue(l("array"), val, key, parent);
-        return val.map(el => transform(el, typ, getProps));
-    }
-    function transformDate(val) {
-        if (val === null) {
-            return null;
-        }
-        const d = new Date(val);
-        if (isNaN(d.valueOf())) {
-            return invalidValue(l("Date"), val, key, parent);
-        }
-        return d;
-    }
-    function transformObject(props, additional, val) {
-        if (val === null || typeof val !== "object" || Array.isArray(val)) {
-            return invalidValue(l(ref || "object"), val, key, parent);
-        }
-        const result = {};
-        Object.getOwnPropertyNames(props).forEach(key => {
-            const prop = props[key];
-            const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
-            result[prop.key] = transform(v, prop.typ, getProps, key, ref);
-        });
-        Object.getOwnPropertyNames(val).forEach(key => {
-            if (!Object.prototype.hasOwnProperty.call(props, key)) {
-                result[key] = transform(val[key], additional, getProps, key, ref);
-            }
-        });
-        return result;
-    }
-    if (typ === "any")
-        return val;
-    if (typ === null) {
-        if (val === null)
-            return val;
-        return invalidValue(typ, val, key, parent);
-    }
-    if (typ === false)
-        return invalidValue(typ, val, key, parent);
-    let ref = undefined;
-    while (typeof typ === "object" && typ.ref !== undefined) {
-        ref = typ.ref;
-        typ = typeMap[typ.ref];
-    }
-    if (Array.isArray(typ))
-        return transformEnum(typ, val);
-    if (typeof typ === "object") {
-        return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
-            : typ.hasOwnProperty("arrayItems") ? transformArray(typ.arrayItems, val)
-                : typ.hasOwnProperty("props") ? transformObject(getProps(typ), typ.additional, val)
-                    : invalidValue(typ, val, key, parent);
-    }
-    // Numbers can be parsed by Date but shouldn't be.
-    if (typ === Date && typeof val !== "number")
-        return transformDate(val);
-    return transformPrimitive(typ, val);
-}
-function cast(val, typ) {
-    return transform(val, typ, jsonToJSProps);
-}
-function uncast(val, typ) {
-    return transform(val, typ, jsToJSONProps);
-}
-function l(typ) {
-    return { literal: typ };
-}
-function a(typ) {
-    return { arrayItems: typ };
-}
-function u(...typs) {
-    return { unionMembers: typs };
-}
-function o(props, additional) {
-    return { props, additional };
-}
-function m(additional) {
-    return { props: [], additional };
-}
-function r(name) {
-    return { ref: name };
-}
-const typeMap = {
-    "Welcome": o([
-        { json: "userId", js: "userId", typ: 0 },
-        { json: "id", js: "id", typ: 0 },
-        { json: "title", js: "title", typ: "" },
-        { json: "body", js: "body", typ: "" },
-    ], false),
-};
-//si te hace falta, min 48 curso 2 midu
-//FIN DE LA VERGA ESTA
+//---------------------------------fetching de datos=>{
+//primero creamos un archivo .mts en lugar de .ts para hacer fetch a un link de git
+//archivo.mts:Un archivo .mts es un archivo TypeScript que se usa en un entorno
+// de módulos de ES (ECMAScript). Al hacer fetch a una API desde un archivo 
+//.mts, el proceso es similar al de un archivo JavaScript, pero con la ventaja 
+//de que puedes usar tipos y otras características de TypeScript.
