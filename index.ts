@@ -267,12 +267,45 @@
 
 //--------------------tyoe from function return (extraer los tipos de lo que devuelve la funcion)
 
-function createAddress(){
-    return {
-        planet: 'tierra',
-        city: 'mexico  '
-    }
-}
+// function createAddress(){
+//     return {
+//         planet: 'tierra',
+//         city: 'mexico  '
+//     }
+// }
 
-type Address = ReturnType<typeof createAddress>//el return type es: quiero que me recuperes el tipo de lo que devuleve la funcion que tiene este createAddress
+// type Address = ReturnType<typeof createAddress>//el return type es: quiero que me recuperes el tipo de lo que devuleve la funcion que tiene este createAddress
 //ahora el Address tiene los valores que retorna la funcion
+
+//-----------------------------Arrays
+
+// type Lenguaje = {
+//     Lenguaje: string;
+//     dificultad: number;
+//     error: boolean;
+// };
+
+// const Lenguages: Lenguaje[] = [];
+
+// Lenguages.push(
+//     { Lenguaje: 'javascript', dificultad: 2, error: true },
+//     { Lenguaje: 'python', dificultad: 1, error: false }
+// );
+
+// Lenguages.forEach(i => {
+//     console.log(`Lenguaje: ${i.Lenguaje}\nDificultad del 1 al 3: ${i.dificultad}`);
+// });
+
+//EJEMPLO CON HEROS
+// type HeroId = `${string}-${string}-${string}-${string}-${string}`
+// type HeroPowerScale = 'local' | 'planetary' | 'galactic' | 'universal' //aca le decimos que su escala de poder puede ser una de esas cadena de textos esta (| = o) esta
+
+// type HeroInfoInput = {
+//     id?:number
+//     name:string
+//     age:number
+// }
+
+// const herosWithBasicInfo:HeroInfoInput[] = [] //podemos tambien decirle a nuestro objeto que tipos de datos va a obtener y que tipo(poner mouse arriba de herosWithBasicInfo y vas a ver lo que hereda)
+
+//
