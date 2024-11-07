@@ -700,29 +700,48 @@
 // }
 // mostrarLongitud(1)
 
-interface Mario {
-    company: 'Nintendo',
-    nombre: string,
-    saltar: () => void
-}
+// interface Mario {
+//     company: 'Nintendo',
+//     nombre: string,
+//     saltar: () => void
+// }
 
-interface Sonic {
-    company:'Sega',
-    nombre: string,
-    correr: () => void
-}
+// interface Sonic {
+//     company:'Sega',
+//     nombre: string,
+//     correr: () => void
+// }
 
-type Personaje = Mario | Sonic  //persona va a ser de tipo mario o sonic
+// type Personaje = Mario | Sonic  //persona va a ser de tipo mario o sonic
 
 //type guard(siempre tratar de evitarlos)
 //-----segunda forma(esta es la mejor forma)(borramos la anterior)
 //esta funcion determina si es sonic o no(discrima el tipo)
-function checkIsSonic(personaje: Personaje): personaje is Sonic{
-    return (personaje as Sonic).correr != undefined//hacemos una asercion como para dar por sentado que es sonic
-}
+// function checkIsSonic(personaje: Personaje): personaje is Sonic{
+//     return (personaje as Sonic).correr != undefined//hacemos una asercion como para dar por sentado que es sonic
+// }
 
-function jugar(personaje: Personaje){
-    if(checkIsSonic(personaje)){//la funcion checkIsSonic va a hacerle saber a ts si el personaje es sonic o no es sonic
-        personaje.correr()
-    }
-}
+// function jugar(personaje: Personaje){
+//     if(checkIsSonic(personaje)){//la funcion checkIsSonic va a hacerle saber a ts si el personaje es sonic o no es sonic
+//         personaje.correr()
+//         return
+//     }else{
+//         personaje.saltar()
+//         return
+//     }
+// }
+
+
+//--------------never(parte en la cual una funcion nunca llega)
+//le indicamos que lo que llega debe ser string o number, y si nunguno de los dos if y else if ingresa, no es niguno,
+//entonces x es never(nunca) no llega 
+// function fn(x:string | number){
+//     if (typeof x ==="string"){
+//         x.toUpperCase()//hacemos un toUpper para validar que se puedan utilizar propiedades de texto
+//     }else if(typeof x ==="number"){
+//         x.toFixed()//lo mismo aca
+//     }
+//     else{
+//         x
+//     }
+// }
