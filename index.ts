@@ -690,3 +690,39 @@
 // }
 
 // console.log(Heroe.id)  
+//-------------------------narrowing
+//es como hacer un envudo, ir perdiendo los tipos que no quieres controlar y no podemos utilizar para esta funcion...
+// function mostrarLongitud(objeto:number | string){
+//     if(typeof objeto === 'string'){//si ingresa aca el objeto cuando ponemos el mouse arriba es si o si string
+//         return objeto.length
+//     }
+//     return objeto.toString().length// en este punto si el codigo llegaaqui solo puede ser un numero, recorda que el return sale de la funcion!
+// }
+// mostrarLongitud(1)
+
+interface Mario {
+    company: 'Nintendo',
+    nombre: string,
+    saltar: () => void
+}
+
+interface Sonic {
+    company:'Sega',
+    nombre: string,
+    correr: () => void
+}
+
+type Personaje = Mario | Sonic  //persona va a ser de tipo mario o sonic
+
+//type guard(siempre tratar de evitarlos)
+//-----segunda forma(esta es la mejor forma)(borramos la anterior)
+//esta funcion determina si es sonic o no(discrima el tipo)
+function checkIsSonic(personaje: Personaje): personaje is Sonic{
+    return (personaje as Sonic).correr != undefined//hacemos una asercion como para dar por sentado que es sonic
+}
+
+function jugar(personaje: Personaje){
+    if(checkIsSonic(personaje)){//la funcion checkIsSonic va a hacerle saber a ts si el personaje es sonic o no es sonic
+        personaje.correr()
+    }
+}
